@@ -1,11 +1,11 @@
 {% set data = load_setup_py_data() %}
 
 package:
-  name: libraryname
+  name: plotwidgets
   version: {{ data.get('version') }}  
 
 source:
-  git_url: https://github.com/munch-group/libraryname.git
+  git_url: https://github.com/munch-group/plotwidgets.git
 
 build:
   # noarch: python
@@ -20,15 +20,12 @@ requirements:
     - pip
   run:       # your library dependencies
     - python
-    # - jupyter
-    # - ipython
-    # - matplotlib>=3.0
-    # - numpy>=1.1
-    # - requests
-    # - biopython
-    # - goatools>=1.2
-    # - pytables
-    # - wget
+    - ipython
+    - ipywidgets 
+    - seaborn
+    - matplotlib
+    - jupyterlab>=4
+    - nodejs
 
 channels:    # your library dependencies
   # - uibcdf
@@ -42,16 +39,16 @@ dependencies:   # Keep this block with only these two packages
   
 test:
   imports:
-    - libraryname
+    - plotwidgets
   # commands:
   #   - exercises --help    
 
 about:
-  home: https://github.com/munch-group/libraryname.git
+  home: https://github.com/munch-group/plotwidgets.git
   license: MIT
   # summary: "Blah blah"
   # description: |
   #   "Blah blah"
   #   "Blah blah"
-  dev_url: https://github.com/munch-group/libraryname.git
-  doc_url: https://munch-group.org/libraryname
+  dev_url: https://github.com/munch-group/plotwidgets.git
+  doc_url: https://munch-group.org/plotwidgets

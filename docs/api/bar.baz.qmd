@@ -1,6 +1,6 @@
-# bar.baz { #libraryname.bar.baz }
+# bar.baz { #plotwidgets.bar.baz }
 
 ```python
-libraryname.bar.baz()
+plotwidgets.bar.baz()
 ```
 

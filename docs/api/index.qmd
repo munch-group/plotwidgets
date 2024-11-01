@@ -6,5 +6,5 @@
 
 | | |
 | --- | --- |
-| [foo](foo.qmd#libraryname.foo) | The sum of two numbers. |
-| [bar.baz](bar.baz.qmd#libraryname.bar.baz) |  |
+| [foo](foo.qmd#plotwidgets.foo) | The sum of two numbers. |
+| [bar.baz](bar.baz.qmd#plotwidgets.bar.baz) |  |

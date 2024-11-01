@@ -26,7 +26,7 @@ def foo(x: int=1, y: int=1) -> int:
     
     See Also
     --------
-    [](`libraryname.scripts.bar`), [](`libraryname.foo`)
+    [](`plotwidgets.scripts.bar`), [](`plotwidgets.foo`)
     """
     
     return x + y

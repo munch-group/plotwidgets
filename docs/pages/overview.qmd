@@ -10,14 +10,14 @@ jupyter:
 ---
 
 
-**libraryname** lets you ... 
+**plotwidgets** lets you ... 
 
 {{< lipsum 1 >}}
 
 ## Installation
 
 ```bash
-conda install -c munch-group libraryname
+conda install -c munch-group plotwidgets
 ```
 
 ## Basic use
@@ -26,7 +26,7 @@ conda install -c munch-group libraryname
 
 ## Some use case
 
-The [foo function](`libraryname.foo`) does ... [](`libraryname.foo`) does ... [](`~libraryname.foo`) does ...
+The [foo function](`plotwidgets.foo`) does ... [](`plotwidgets.foo`) does ... [](`~plotwidgets.foo`) does ...
 
 {{< lipsum 1 >}}
 
