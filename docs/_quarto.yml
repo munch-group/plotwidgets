@@ -5,8 +5,6 @@ project:
     - examples/single-page
     - examples/pkgdown
     - examples/auto-package
-    # - objects.txt
-    # - objects-test.txt
 
 execute:
   freeze: auto
@@ -28,18 +26,15 @@ interlinks:
     numpy:
       url: https://numpy.org/doc/stable/
     pandas:
-      url: https://pandas.pydata.org/docs/      
-    # quartodoc-test:
-    #   url: https://machow.github.io/quartodoc
-    #   inv: objects-test.txt
+      url: https://pandas.pydata.org/docs/
+    ipython:
+      url: https://ipython.readthedocs.io/en/stable/          
 
 website:
   title: "plotwidgets"
   page-navigation: true
   navbar:
     left:
-      # - file: examples/
-      #   text: Examples
       - href: api/
         text: Reference
     right:
@@ -52,16 +47,10 @@ website:
       align: left
       contents:
         - pages/getting_started.qmd
-        # - section: "Basics"
-        #   contents:
-        #     - pages/basics.qmd
         - section: "Examples"
           contents:
-            - pages/showcase.ipynb            
-            - pages/widgets.ipynb            
-        # - section: "Advanced"
-        #   contents:
-        #     - pages/advanced.qmd
+            - examples/showcase.ipynb            
+            - examples/widgets.ipynb            
         - section: "Library reference"
           contents:
             - api/index.qmd

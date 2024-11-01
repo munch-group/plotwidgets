@@ -6,5 +6,4 @@
 
 | | |
 | --- | --- |
-| [foo](foo.qmd#plotwidgets.foo) | The sum of two numbers. |
-| [bar.baz](bar.baz.qmd#plotwidgets.bar.baz) |  |
+| [seaborn](seaborn.qmd#plotwidgets.seaborn) | This function is a wrapper for seaborn plots. It creates a set of dropdowns  |

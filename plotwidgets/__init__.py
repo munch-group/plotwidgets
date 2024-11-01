@@ -8,6 +8,7 @@ import inspect
 import pandas
 from collections import defaultdict
 from functools import partial
+import IPython.display
 
 GRAPHICS = [
     sns.scatterplot,
@@ -35,7 +36,7 @@ GRAPHICS = [
     sns.jointplot,
 ]
 
-def seaborn(data: pandas.DataFrame, **kwargs: int | str | float) -> None:
+def seaborn(data: pandas.DataFrame, plot: str | None, graphics: list | None, **kwargs: int | str | float) -> IPython.display.DisplayHandle:
     """
     This function is a wrapper for seaborn plots. It creates a set of dropdowns 
     for the most common parameters in seaborn plots.
@@ -44,8 +45,31 @@ def seaborn(data: pandas.DataFrame, **kwargs: int | str | float) -> None:
     ----------
     data :
         The data to be plotted. A pandas.DataFrame.
+    plot :
+        The seaborn plot to be used. Default is `'scatterplot'`.
+    graphics :
+        A list of seaborn plotting functions to be used. Default is a list of common seaborn plotting functions.
+    **kwargs
+        Extra arguments passed to seaborn plotting function, such as `x`, `y`, `hue`, `row`, `col`, `palette`, `style`.
+        See the [seaborn documentation](https://seaborn.pydata.org/) for all possible arguments.
+        list of all possible arguments.
 
-    Returns the display of two ipywidgets objects: an HBox with the dropdowns and a seaborn plot.
+    Returns
+    -------
+    :
+        The display of two ipywidgets objects: an HBox with the dropdowns and a seaborn plot.
+
+    Examples
+    --------    
+    This code will display a scatter plot of `flipper_length_mm` against `body_mass_g` with 
+    dropdown menus for `x`, `y`, and `hue` variables. Selecting form the dropdowns will update the plot.
+
+    ```python
+    import seaborn as sns
+    import plotwidgets as pw
+    data = sns.load_dataset('penguins')
+    pw.seaborn(data, x='flipper_length_mm', y='body_mass_g', hue='species')
+    ```
     """
 
     graphics = GRAPHICS

@@ -2,5 +2,4 @@
 # Project: plotwidgets
 # Version: 0.0.9999
 # The remainder of this file is compressed using zlib.
-plotwidgets.foo py:function 1 api/foo.html#plotwidgets.foo -
-plotwidgets.bar.baz py:function 1 api/bar.baz.html#plotwidgets.bar.baz -
+plotwidgets.seaborn py:function 1 api/seaborn.html#plotwidgets.seaborn -

@@ -1,6 +1,0 @@
-# bar.baz { #plotwidgets.bar.baz }
-
-```python
-plotwidgets.bar.baz()
-```
-
