@@ -51,17 +51,17 @@ website:
       style: floating
       align: left
       contents:
-        - pages/overview.qmd
-        - section: "Basics"
-          contents:
-            - pages/basics.qmd
+        - pages/getting_started.qmd
+        # - section: "Basics"
+        #   contents:
+        #     - pages/basics.qmd
         - section: "Examples"
           contents:
-            - pages/example.ipynb            
-            - pages/something.ipynb            
-        - section: "Advanced"
-          contents:
-            - pages/advanced.qmd
+            - pages/showcase.ipynb            
+            - pages/widgets.ipynb            
+        # - section: "Advanced"
+        #   contents:
+        #     - pages/advanced.qmd
         - section: "Library reference"
           contents:
             - api/index.qmd
@@ -91,5 +91,5 @@ quartodoc:
     - title: Some section
       desc: ""
       contents:
-        - foo        # function: quartodoc.get_object
-        - bar.baz       # submodule func: quartodoc.ast.preview
+        - seaborn
+
