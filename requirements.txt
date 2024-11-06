@@ -1,6 +1,0 @@
-ipython
-ipywidgets 
-seaborn
-matplotlib
-jupyterlab>=4
-nodejs
