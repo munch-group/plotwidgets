@@ -1,7 +1,14 @@
 # seaborn { #plotwidgets.seaborn }
 
 ```python
-plotwidgets.seaborn(data, plot, graphics, **kwargs)
+plotwidgets.seaborn(
+    data
+    plot=None
+    graphics=None
+    wrap=3
+    theme={'context': 'notebook', 'style': 'darkgrid', 'palette': 'viridis'}
+    **kwargs
+)
 ```
 
 This function is a wrapper for seaborn plots. It creates a set of dropdowns 
@@ -13,13 +20,21 @@ for the most common parameters in seaborn plots.
 
 :   The data to be plotted. A pandas.DataFrame.
 
-<code>[**plot**]{.parameter-name} [:]{.parameter-annotation-sep} [[str](`str`) \| None]{.parameter-annotation}</code>
+<code>[**plot**]{.parameter-name} [:]{.parameter-annotation-sep} [[str](`str`)]{.parameter-annotation} [ = ]{.parameter-default-sep} [None]{.parameter-default}</code>
 
 :   The seaborn plot to be used. Default is `'scatterplot'`.
 
-<code>[**graphics**]{.parameter-name} [:]{.parameter-annotation-sep} [[list](`list`) \| None]{.parameter-annotation}</code>
+<code>[**graphics**]{.parameter-name} [:]{.parameter-annotation-sep} [[list](`list`)]{.parameter-annotation} [ = ]{.parameter-default-sep} [None]{.parameter-default}</code>
 
 :   A list of seaborn plotting functions to be used. Default is a list of common seaborn plotting functions.
+
+<code>[**wrap**]{.parameter-name} [:]{.parameter-annotation-sep} [[int](`int`)]{.parameter-annotation} [ = ]{.parameter-default-sep} [3]{.parameter-default}</code>
+
+:   Max number of dropdowns in each row.
+
+<code>[**theme**]{.parameter-name} [:]{.parameter-annotation-sep} [[dict](`dict`)]{.parameter-annotation} [ = ]{.parameter-default-sep} [{\'context\': \'notebook\', \'style\': \'darkgrid\', \'palette\': \'viridis\'}]{.parameter-default}</code>
+
+:   Dictionary with keyword arguments for seaborn.set_theme().
 
 <code>[****kwargs**]{.parameter-name} [:]{.parameter-annotation-sep} [[int](`int`) \| [str](`str`) \| [float](`float`)]{.parameter-annotation} [ = ]{.parameter-default-sep} [{}]{.parameter-default}</code>
 
@@ -29,9 +44,12 @@ for the most common parameters in seaborn plots.
 
 <code>[]{.parameter-name} [:]{.parameter-annotation-sep} [[IPython](`IPython`).[display](`IPython.display`).[DisplayHandle](`IPython.display.DisplayHandle`)]{.parameter-annotation}</code>
 
-:   The display of two ipywidgets objects: an HBox with the dropdowns and a seaborn plot.
+:   The display of two widgets objects: an HBox with the dropdowns and a seaborn plot.
 
 ## Examples {.doc-section .doc-section-examples}
+
+This code will display a scatter plot of `flipper_length_mm` against `body_mass_g` with 
+dropdown menus for `x`, `y`, and `hue` variables. Selecting form the dropdowns will update the plot.
 
 ```python
 import seaborn as sns
@@ -39,6 +57,3 @@ import plotwidgets as pw
 data = sns.load_dataset('penguins')
 pw.seaborn(data, x='flipper_length_mm', y='body_mass_g', hue='species')
 ```
-
-The code above will display a scatter plot of `flipper_length_mm` against `body_mass_g` with 
-dropdown menus for `x`, `y`, and `hue` variables. Selecting form the dropdowns will update the plot.

@@ -1,0 +1,41 @@
+---
+title: Seaborn
+jupyter:
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+
+
+
+## Dimonsions and color
+
+## style, and size
+
+seaborn.lineplot, s
+
+## Plot signatures
+
+[](`plotwidgets.seaborn`) will limit the "Plot" options to the seaborn graphics compatible with the keywords arguments supplied.
+
+## No keyword argumnets
+
+If you know which plots take what parameters
+
+TODO: I could in priciple make the plot dropdown update to reflect which dimensions are currently chosen in the dimension dropdowns...
+
+## Facet plots
+
+[](`~seaborn.relplot`)
+[](`~seaborn.displot`)
+[](`~seaborn.catplot`)
+[](`~seaborn.lmplot`)
+
+# Kind
+
+## Themes
+
+
+## Kinds

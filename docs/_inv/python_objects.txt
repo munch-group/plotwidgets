@@ -13532,7 +13532,7 @@ EXCEPTION_HANDLED std:monitoring-event 1 library/sys.monitoring.html#monitoring-
 EXTENDED_ARG std:opcode 1 library/dis.html#opcode-$ -
 EXTRA_CFLAGS std:envvar 1 using/configure.html#envvar-$ -
 FORMAT_SIMPLE std:opcode 1 library/dis.html#opcode-$ -
-FORMAT_SPEC std:opcode 1 library/dis.html#opcode-$ -
+FORMAT_WITH_SPEC std:opcode 1 library/dis.html#opcode-$ -
 FOR_ITER std:opcode 1 library/dis.html#opcode-$ -
 GDBM_CFLAGS std:cmdoption 1 using/configure.html#cmdoption-arg-$ -
 GDBM_LIBS std:cmdoption 1 using/configure.html#cmdoption-arg-$ -
@@ -15789,6 +15789,7 @@ regular package std:term -1 glossary.html#term-regular-package -
 relativeimports std:label -1 reference/import.html#$ Package Relative Imports
 relevant-peps std:label -1 library/typing.html#$ Specification for the Python Type System
 removed-in-python-39 std:label -1 whatsnew/3.9.html#$ Removed
+repeated-warning-suppression-criteria std:label -1 library/warnings.html#$ Repeated Warning Suppression Criteria
 reporting-bugs std:label -1 bugs.html#$ Dealing with Bugs
 repr-objects std:label -1 library/reprlib.html#$ Repr Objects
 request-objects std:label -1 library/urllib.request.html#$ Request Objects

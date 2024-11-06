@@ -47,6 +47,9 @@ website:
       align: left
       contents:
         - pages/getting_started.qmd
+        - section: "Widgets"
+          contents:
+            - pages/seaborn.qmd            
         - section: "Examples"
           contents:
             - examples/showcase.ipynb            
