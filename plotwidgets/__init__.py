@@ -8,6 +8,7 @@ import pandas
 from pandas.api.types import is_numeric_dtype
 from collections import defaultdict
 import numpy as np
+from math import sqrt
 
 import ipywidgets as widgets
 import IPython.display
@@ -19,8 +20,8 @@ AXIS_LEVEL_GRAPHICS = [
     sns.lineplot,
     sns.histplot,
     sns.kdeplot,
-    sns.ecdfplot,
-    sns.rugplot,
+    # sns.ecdfplot,
+    # sns.rugplot,
     sns.stripplot,
     sns.swarmplot,
     sns.boxplot,
@@ -29,7 +30,7 @@ AXIS_LEVEL_GRAPHICS = [
     sns.pointplot,
     sns.barplot,
     sns.countplot,
-    sns.residplot,
+    # sns.residplot,
 ]
 FIG_LEVEL_GRAPHICS = [
     sns.relplot,
@@ -50,7 +51,13 @@ for kind in ['strip', 'swarm', 'box', 'violin', 'boxen', 'point', 'bar', 'count'
 for kind in ['reg']:
     AX2FIG[kind] = sns.lmplot
 
-KWARGS = dict()
+OPTIONS = dict(
+    max_figure_width=10, 
+    max_figure_height=5,
+    theme = dict(style='darkgrid', palette='viridis'),
+    graphics=AXIS_LEVEL_GRAPHICS
+    )
+
 
 def set_options(**kwargs) -> None:
     """
@@ -104,10 +111,12 @@ def set_options(**kwargs) -> None:
     ```
     """    
 
-    KWARGS.update(kwargs)
+    OPTIONS.update(kwargs)
 
 
-def seaborn(data: pandas.DataFrame, **kwargs) -> IPython.display.DisplayHandle:
+
+# def seaborn(data: pandas.DataFrame, **kwargs) -> IPython.display.DisplayHandle:
+def seaborn(data: pandas.DataFrame, x: str=None, y: str=None, hue: str=None, row: str=None, col: str=None) -> IPython.display.DisplayHandle:
     """
     This function is a wrapper for seaborn plots. It creates a set of dropdowns 
     for the most common parameters in seaborn plots.
@@ -143,83 +152,54 @@ def seaborn(data: pandas.DataFrame, **kwargs) -> IPython.display.DisplayHandle:
     pw.seaborn(data)
     ```
     """
-    plot_dimensions = ['x', 'y', 'hue', 'row', 'col']
 
-    # include preset options    
-    kwargs.update(KWARGS)
-
-    # set theme defaults if none provided
-    theme = {}
-    if 'theme' in kwargs:
-        theme = kwargs['theme']
-    theme.setdefault('style', 'darkgrid')
-    theme.setdefault('palette', 'viridis')
-    sns.set_style(theme)
+    kwargs = dict(x=x, y=y, hue=hue, row=row, col=col)
+    plot_dimensions = ['x', 'y', 'hue', 'col', 'row']
 
     # use all dimensions as default, unless otherwise specified
-    if not any(key in plot_dimensions for key in kwargs):
+    if all(kwargs[key] is None for key in plot_dimensions):
         for key in plot_dimensions:
-            kwargs[key] = '- none -'
+            kwargs[key] = 'none'
 
-    # limit graphics
-    if 'graphics' in kwargs:
-        used_graphics = kwargs['graphics']
-        del kwargs['graphics']
-    else:
-        used_graphics = AXIS_LEVEL_GRAPHICS
+    # remove dimensions with None values
+    for key in plot_dimensions:
+        if kwargs[key] is None:
+            del kwargs[key]
+    
 
-    # FIXME: is this needed?
-    kwargs = defaultdict(None, kwargs)
+
+
+    # # include preset options    
+    # kwargs.update(OPTIONS)
+
+    # set theme defaults if none provided
+    if 'theme' in OPTIONS:
+        sns.set_style(OPTIONS['theme'])
+    # theme.setdefault('style', 'darkgrid')
+    # theme.setdefault('palette', 'viridis')
+    
+
+
+
+    # # limit graphics
+    # if 'graphics' in kwargs:
+    #     used_graphics = kwargs['graphics']
+    #     del kwargs['graphics']
+    # else:
+    #     used_graphics = AXIS_LEVEL_GRAPHICS
+
+    # # FIXME: is this needed?
+    # kwargs = defaultdict(None, kwargs)
 
     categorical_col_names = data.columns[(data.map(type) == str).all(0)].to_list()
 
     # dropdown controls
     dropdowns = defaultdict(None)
 
-    # options_dict = dict() # for storing the additional options supplied from the other tab
-    # options_text = widgets.Text(placeholder='Enter subreddit', 
-    #                             description='Options',
-    #                             layout=widgets.Layout(width='70em'))
-
-    # def _set_plot_options_text(change):
-    #     """
-    #     Sets the text in the plot options dropdown based on the selected plot
-    #     """
-    #     if dropdowns['plot'].value != '- none -':
-    #         plot = dropdowns['plot'].value
-
-    #         l = []
-    #         kind = change.new.__name__.replace('plot', '')
-    #         params = inspect.signature(AX2FIG[kind]).parameters.values()
-    #         for p in params:
-    #             if p.default is not p.empty and p.name not in ['data', 'ax', 'legend']+plot_dimensions:
-    #                 l.append(f'{p.name}={repr(p.default)}')
-
-    #         params = inspect.signature(change.new).parameters.values()
-    #         for p in params:
-    #             if p.default is not p.empty and p.name not in ['data', 'ax', 'legend']+plot_dimensions:
-    #                 l.append(f'{p.name}={repr(p.default)}')
-    #         text = ', '.join(l)
-
-    #         options_text.value = f"{text}"
-    #     else:
-    #         options_text.value = ''
-
-
-    # def _set_default_options(change):
-    #     global options_dict
-
-    #     if change.new:
-    #         eval(f'options_dict = {{{change.new}}}')
-    #         print(options_dict)
-
-    # options_text.observe(_set_default_options)
-
     # plot dropdown
-    plot_options = [('- none -', '- none -')]
+    plot_options = [('none', 'none')]
     drop_down_plot = widgets.Dropdown(options=plot_options, description='Plot:', disabled=False)
     dropdowns['plot'] = drop_down_plot
-    # dropdowns['plot'].observe(_set_plot_options_text, names='value')
 
 
     def _set_graphics_options(change):
@@ -228,15 +208,15 @@ def seaborn(data: pandas.DataFrame, **kwargs) -> IPython.display.DisplayHandle:
         """
         _kwargs = kwargs.copy()
         for k, v in dropdowns.items():
-            if v.value != '- none -':
+            if v.value != 'none':
                 _kwargs[k] = v.value
 
         options = []
-        for g in used_graphics:
+        for g in OPTIONS['graphics']:
 
             not_plot_args = set(['plot', 'theme', 'graphics', 'row', 'col'])
             sign = set(inspect.signature(g).parameters.keys()).union(not_plot_args)
-            param = set(k for k, v in _kwargs.items() if v != '- none -' and v != None)
+            param = set(k for k, v in _kwargs.items() if v != 'none' and v != None)
             if not param:
                 continue
             if not param.issubset(sign):
@@ -246,7 +226,7 @@ def seaborn(data: pandas.DataFrame, **kwargs) -> IPython.display.DisplayHandle:
 
             options.append(g)
 
-        dropdowns['plot'].options = [('- none -', '- none -')] + [(g.__name__, g) for g in options]
+        dropdowns['plot'].options = [('none', 'none')] + [(g.__name__, g) for g in options]
 
 
 
@@ -260,18 +240,18 @@ def seaborn(data: pandas.DataFrame, **kwargs) -> IPython.display.DisplayHandle:
         # only dims in kwargs
         if var in kwargs:
             # all variables
-            options = ['- none -'] + data.columns.to_list()
+            options = ['none'] + data.columns.to_list()
             if var in ['row', 'col']:
                 # only strings (categorical) values
                 options = data.columns[(data.map(type) == str).any()].to_list()
                 if not options:
                     # don't make dropdown if there are no string options
                     continue
-                options = ['- none -'] + options
+                options = ['none'] + options
             # set default if any
             default = kwargs[var]
             if default is None:
-                default = '- none -'
+                default = 'none'
             # make widget
             drop_down = widgets.Dropdown(options=options, value=default, 
                                          description=f'{var.capitalize()}:', disabled=False)
@@ -299,15 +279,15 @@ def seaborn(data: pandas.DataFrame, **kwargs) -> IPython.display.DisplayHandle:
         # get plotting parameters
         _kwargs = {}
         for k, v in kwargs.items():
-            if v != '- none -':
+            if v != 'none':
                 _kwargs[k] = v
         for k, v in dropdowns.items():
-            if v.value != '- none -':
+            if v.value != 'none':
                 _kwargs[k] = v.value
 
         # get plot and remove from _kwargs
         selected_plot = None
-        if 'plot' in _kwargs and _kwargs['plot'] != '- none -':
+        if 'plot' in _kwargs and _kwargs['plot'] != 'none':
             selected_plot = _kwargs['plot']
             del _kwargs['plot']
 
@@ -317,7 +297,7 @@ def seaborn(data: pandas.DataFrame, **kwargs) -> IPython.display.DisplayHandle:
             if not is_numeric_dtype(data[_kwargs['hue']]):
                 _kwargs['palette'] = "muted"
             else:
-                _kwargs['palette'] = theme['palette']
+                _kwargs['palette'] = OPTIONS['theme']['palette']
 
         # close any plots in output
         plt.close('all') 
@@ -336,38 +316,72 @@ def seaborn(data: pandas.DataFrame, **kwargs) -> IPython.display.DisplayHandle:
         with warnings.catch_warnings(record=True) as caught_warnings:
             warnings.simplefilter("always") 
 
+            # extra plot kwargs for figure level seaborn plots
+            extra_kwargs = {}
+
+            max_facet_height = 5
+            min_facet_height = 2
+            default_height = 5
+
+            # find size of facets
             row_cats, col_cats = 1, 1
             if 'row' in _kwargs:
                 row_cats = data.loc[~data[_kwargs['row']].isnull(), _kwargs['row']].unique().size
             if 'col' in _kwargs:
                 col_cats = data.loc[~data[_kwargs['col']].isnull(), _kwargs['col']].unique().size
-            max_facet_dim = max(row_cats, col_cats)
-            max_height = 4
-            min_height = 2
-            max_size = 8
-            height = round(max(min_height, min(max_height, max_size / max_facet_dim)), 2)
 
-            # height = round(max(1.5, 7 / max(row_cats, col_cats)), 2)
+            possible_width = max(min_facet_height, min(max_facet_height, OPTIONS['max_figure_width'] / col_cats))
+            possible_height = max(min_facet_height, min(max_facet_height, OPTIONS['max_figure_height'] / row_cats))
+            if 'row' in _kwargs and 'col' in _kwargs:
+                extra_kwargs['height'] = min(possible_width, possible_height)                
+            elif 'row' in _kwargs:
+                extra_kwargs['height'] = possible_height
+            elif 'col' in _kwargs:
 
-            # figsize = (2, 2*1.12)
 
+                tolerance = 0.01
+
+                def find_facet_size(min_sq_size, max_sq_size):
+
+                    sq_size = (min_sq_size + max_sq_size) / 2
+                    if abs(sq_size - min_sq_size) < tolerance or abs(sq_size - max_sq_size) < tolerance:
+                        return sq_size
+                    sq_per_row = OPTIONS['max_figure_width'] // sq_size
+                    sq_per_col = OPTIONS['max_figure_height'] // sq_size
+                    sq_fitted = sq_per_row * sq_per_col
+                    if sq_fitted < col_cats:
+                        return find_facet_size(min_sq_size, sq_size)
+                    else:
+                        return find_facet_size(sq_size, max_sq_size)
+
+                max_square_size = sqrt(OPTIONS['max_figure_height'] * OPTIONS['max_figure_width'] / col_cats)
+
+                extra_kwargs['height'] = find_facet_size(0, max_square_size) - tolerance
+                print(OPTIONS['max_figure_height'],  OPTIONS['max_figure_width'],  extra_kwargs['height'])
+                extra_kwargs['col_wrap'] = int(OPTIONS['max_figure_width'] / extra_kwargs['height'])
+
+            else:
+                extra_kwargs['height'] = default_height
+
+            # set kind for figure level plots
             kind = selected_plot.__name__.replace('plot', '')
+            extra_kwargs['kind'] = kind 
 
-            if AX2FIG[kind].__name__ == 'relplot':
-                extras = dict(kind=kind, height=height)
-            if AX2FIG[kind].__name__ == 'catplot':
-                extras = dict(kind=kind, height=height)
-            if AX2FIG[kind].__name__ == 'lmplot':
-                extras = dict(kind=kind, height=height)
-            if AX2FIG[kind].__name__ == 'displot':
-                extras = dict(kind=kind, height=height)
+            # if AX2FIG[kind].__name__ == 'relplot':
+            #     extra_kwargs = dict(kind=kind, height=height, col_wrap=col_wrap)
+            # if AX2FIG[kind].__name__ == 'catplot':
+            #     extra_kwargs = dict(kind=kind, height=height)
+            # if AX2FIG[kind].__name__ == 'lmplot':
+            #     extra_kwargs = dict(kind=kind, height=height)
+            # if AX2FIG[kind].__name__ == 'displot':
+            #     extra_kwargs = dict(kind=kind, height=height)
                           
-
+            figure_level_plot_function = AX2FIG[extra_kwargs['kind']]
             # extras.update(options_dict)
             # orig_fig_size = matplotlib.rcParams['figure.figsize']
             with output:
                 # sns.set_theme(rc={"figure.figsize": figsize})
-                g = AX2FIG[kind](data, **_kwargs, **extras)
+                g = figure_level_plot_function(data, **_kwargs, **extra_kwargs)
                 g.set_titles(col_template="{col_name}", row_template="{row_name}")
                 g.tight_layout()
                 output.clear_output()
@@ -432,7 +446,7 @@ def seaborn(data: pandas.DataFrame, **kwargs) -> IPython.display.DisplayHandle:
                 if warn.category is not UserWarning:
                     print(warn.message)
 
-            _kwargs.update(extras)
+            _kwargs.update(extra_kwargs)
             kw = ', '.join([f"{k}={repr(v)}" for k, v in _kwargs.items()])
             cmd = f'sns.{AX2FIG[kind].__name__}(data, {kw})'
             mdout = Markdown(f"""
@@ -443,21 +457,23 @@ def seaborn(data: pandas.DataFrame, **kwargs) -> IPython.display.DisplayHandle:
                              
 ```python
 import seaborn as sns
-sns.set_style({theme})                             
+sns.set_style({OPTIONS['theme']})                             
 {cmd}
 g.set_titles(col_template="{{col_name}}", row_template="{{row_name}}")
 g.tight_layout()
 ```
 
 <br>    
-See the <a href=https://seaborn.pydata.org/generated/seaborn.{selected_plot.__name__}.html >documentation</a>
-for details and additional arguments to <code>sns.{selected_plot.__name__}</code>.
+See the <a href=https://seaborn.pydata.org/generated/seaborn.{figure_level_plot_function.__name__}.html >documentation</a> 
+for details and additional arguments to <code>sns.{figure_level_plot_function.__name__}</code>.
 
 </details>
 
 """)
+
             # markdown_html = widgets.HTML(mdout._repr_markdown_())
             with markdown_output:
+                markdown_output.clear_output()
                 display(mdout)
 
     button_layout = widgets.Layout(width='15em')
