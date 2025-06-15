@@ -333,7 +333,10 @@ def seaborn(data: pandas.DataFrame, x: str=None, y: str=None, hue: str=None, row
             possible_width = max(min_facet_height, min(max_facet_height, OPTIONS['max_figure_width'] / col_cats))
             possible_height = max(min_facet_height, min(max_facet_height, OPTIONS['max_figure_height'] / row_cats))
             if 'row' in _kwargs and 'col' in _kwargs:
-                extra_kwargs['height'] = min(possible_width, possible_height)                
+                extra_kwargs['height'] = min(possible_width, possible_height)    
+                extra_kwargs['facet_kws'] = dict(
+                    margin_titles=True,
+                    )
             elif 'row' in _kwargs:
                 extra_kwargs['height'] = possible_height
             elif 'col' in _kwargs:
@@ -458,7 +461,7 @@ def seaborn(data: pandas.DataFrame, x: str=None, y: str=None, hue: str=None, row
 ```python
 import seaborn as sns
 sns.set_style({OPTIONS['theme']})                             
-{cmd}
+g = {cmd}
 g.set_titles(col_template="{{col_name}}", row_template="{{row_name}}")
 g.tight_layout()
 ```

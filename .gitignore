@@ -132,3 +132,7 @@ steps
 
 /.quarto/
 _book/
+
+# pixi environments
+.pixi
+*.egg-info
